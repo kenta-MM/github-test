@@ -13,5 +13,5 @@ jobs:                                               # ジョブの定義
               with:                               # withを使えばモジュールに対してパラメーターを付与することができる
                 ref: main
             - run: |                               # 複数行のスクリプトの実行も可能
-                git log -l
+                git log --graph --oneline
                 tree -a .
