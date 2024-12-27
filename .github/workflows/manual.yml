@@ -12,11 +12,19 @@ on:
                 default: true
                 required: true
                 description: "bool値の引数"
+            log-level:
+                type: choice                    # 入力パラメーターを特定の値に制限
+                options:
+                    - info
+                    - warn
+                    - error
+                default: info
 jobs:
     run:
         runs-on: ubuntu-latest
         steps:
             - run: |
                 echo "${{ inputs.greeting }}" # 入力パラメーター「greeting」の参照
-                echo "${{ inputs.greeting }}" # 入力パラメーター「greeting」の参照
+                echo "${{ inputs.flag }}" # 入力パラメーター「flag」の参照
+                echo "${{ inputs.log-level }}" # 入力パラメーター「log-level」の参照
             
