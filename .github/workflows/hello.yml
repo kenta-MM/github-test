@@ -2,12 +2,12 @@ name: Hello                                         # ワークフロー名(実�
 on: push                                            # イベント(push時に起動)
 jobs:                                               # ジョブの定義
     hello:                                          # ジョブID
-        runs-on: ubuntus-latest                     # ランナー(ubuntusで実行)
+        runs-on: ubuntu-latest                      # ランナー(ubuntusで実行)
         steps:                                      # ステップの定義
             - run: echo "Hello, world"              # シェルコマンドの実行
             - uses: actions/checkout@v4             # アクションの呼び出し(github actionsのモジュールの一種)
     hello2:
-        runs-on: ubuntsu-latest
+        runs-on: ubuntu-latest
         steps:
             - run: |                               # 複数行のスクリプトの実行も可能
                 git log -l
