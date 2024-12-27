@@ -1,0 +1,14 @@
+# コンテキストは実行時の情報や、ジョブの実行結果などを保持するオブジェクトで、
+# 複数のプロパティで構成され、各プロパティから値を取得できる。
+name: Contexts
+on: push
+jobs:
+    print:
+        runs-on: ubuntu-latest
+        steps:
+            - run: |
+                echo actor = "${{ github.actor }}" # githubコンテキストの参照
+                echo run_id = "${{ github.run_id }}" # githubコンテキストの参照
+                echo head_ref = "${{ github.head_ref }}" # githubコンテキストの参照
+                echo workspace = "${{ github.workspace }}" # githubコンテキストの参照
+                echo event = "${{ github.event }}" # githubコンテキストの参照
