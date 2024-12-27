@@ -4,6 +4,6 @@ jobs:
     print:
         runs-on: ubuntu-latest
         env:
-            ACTOR: ${{  github.actor }} # コンテキストの値を環境変数へセット
+            ACTOR: ${{ github.actor }} # コンテキストの値を環境変数へセット
         steps:
             - run: echo "${ACTOR}"      # 環境変数経由でコンテキストのプロパティを参照(参照時にダブルクォーテーションで囲むことでくぉーとできる。これGithub Actionsの仕様ではなく一般的なシェルの仕様)

@@ -1,0 +1,13 @@
+name: Varibables
+on: push
+jobs:
+    print:
+        runs-on: ubuntu-latest
+        env:
+            USERNAME: ${{ vars.USERNAME }} # variablesの参照
+            ABUSE_TEST: ${{ vars.ABUSE_TEST }}
+        steps:
+            - run: |
+                echo "${USERNAME}"
+                echo ${{ vars.ABUSE_TEST }}
+                echo "${ABUSE_TEST}"
