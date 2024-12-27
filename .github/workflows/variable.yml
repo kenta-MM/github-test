@@ -8,6 +8,6 @@ jobs:
             ABUSE_TEST: ${{ vars.ABUSE_TEST }}
         steps:
             - run: |
-                echo "${USERNAME}"
-                echo ${{ vars.ABUSE_TEST }}
-                echo "${ABUSE_TEST}"
+                "${USERNAME}"
+                ${{ vars.ABUSE_TEST }}
+                "${ABUSE_TEST}"
