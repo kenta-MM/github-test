@@ -9,3 +9,8 @@ jobs:
             - run: echo "${RESULT}"
               env:
                 RESULT: ${{ steps.source.outputs.result }}      # stepsコンテキストから参照 
+    share2:
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo "RESULT=hello" >> "${GITHUB_ENV}" # GITHUB_ENVに書き出し(グローバル変数に格納するみたいなものなので、あまり使わないほうがいい)
+            - run: echo "${RESULT}"
