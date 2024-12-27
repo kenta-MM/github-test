@@ -9,9 +9,9 @@ jobs:                                               # ジョブの定義
     hello2:
         runs-on: ubuntu-latest
         steps:
-            - run: |                               # 複数行のスクリプトの実行も可能
-                git log -l
-                tree -a .
             - uses: actions/checkout@v4
               with:                               # withを使えばモジュールに対してパラメーターを付与することができる
                 ref: main
+            - run: |                               # 複数行のスクリプトの実行も可能
+                git log -l
+                tree -a .
