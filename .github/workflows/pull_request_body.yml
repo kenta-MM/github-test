@@ -4,7 +4,11 @@ jobs:
     print:
         runs-on: ubuntu-latest
         steps:
-            - env: 
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+            
+            - name: Print PullRequest Body
+              env: 
                 PULL_REQUEST_BODY: ${{ github.event.pull_request.body }} 
               run: echo '${PULL_REQUEST_BODY}'
                  
