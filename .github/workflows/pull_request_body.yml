@@ -1,0 +1,7 @@
+name: Pull Request Body
+on: pull_request
+jobs:
+    print:
+        runs-on: ubuntu-latest
+        steps:
+            - run: echo ${{github.event.pull_request.body }}
