@@ -4,6 +4,6 @@ jobs:
     print:
         runs-on: ubuntu-latest
         steps:
-            - run: echo '${PULL_REQUEST_BODY}'
-              env: 
-                PULL_REQUEST_BODY: ${{ github.event.pull_request.body }}    
+            - env: PULL_REQUEST_BODY: ${{ github.event.pull_request.body }} 
+              run: echo '${PULL_REQUEST_BODY}'
+                 
