@@ -11,7 +11,7 @@ jobs:
     timeout-minutes: 1
     permissions:              # GITHUB_TOKENの権限を設定
       pull-requests: write    # プルリクエストの書き込みを許可
-      contents: read          # ソースコードの読み込みを許可
+      issues: write           # ISSUEへの書き込みを許可する
     if: ${{ startsWith(github.head_ref, 'issue-')}}
     steps:
       - id: source
@@ -20,7 +20,7 @@ jobs:
           ISSUE_NUM="${ISSUE_NUM:6}"
           echo "issue_num=$ISSUE_NUM" >> "$GITHUB_OUTPUT"
       - run: |
-          CMD="gh api repos/${REPOSITORY}/issues/${ISSUE_NUM} -X PATCH -F pull_request="${PR_URL}""
+          CMD="gh api repos/${REPOSITORY}/issues/${ISSUE_NUM} -X PATCH -F pull_request=${PR_URL}"
           echo "Executing: $CMD"
           eval "$CMD"
         env:
