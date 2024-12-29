@@ -21,7 +21,7 @@ jobs:
                 ISSUE_NUM="${ISSUE_NUM:6}"
                 echo "issue_num=$ISSUE_NUM" >> "$GITHUB_OUTPUT"
           - run: |
-                CMD="gh issue view ${ISSUE_NUM} --json body, labels, projectItems, assignees"
+                CMD="gh issue view ${ISSUE_NUM} --json body"
                 echo "Executing: $CMD"
                 eval "$CMD"
             env:
