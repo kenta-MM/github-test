@@ -20,6 +20,7 @@ jobs:
                 ISSUE_NUM="${{ github.head_ref }}"
                 ISSUE_NUM="${ISSUE_NUM:6}"
                 echo "issue_num=$ISSUE_NUM" >> "$GITHUB_OUTPUT"
+          - uses: actions/checkout@v4
           - run: |
                 CMD="gh issue view ${ISSUE_NUM} --json body"
                 echo "Executing: $CMD"
