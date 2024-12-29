@@ -20,9 +20,9 @@ jobs:
                 ISSUE_NUM="${{ github.head_ref }}"
                 ISSUE_NUM="${ISSUE_NUM:6}"
                 echo "issue_num=$ISSUE_NUM" >> "$GITHUB_OUTPUT"
-            env:
-                ISSUE_NUM: ${{ steps.source.outputs.issue_num }}
           - run: |
                 CMD="gh issue view ${ISSUE_NUM} --json body, labels, projectItems, assignees"
                 echo "Executing: $CMD"
                 eval "$CMD"
+            env:
+              ISSUE_NUM: ${{ steps.source.outputs.issue_num }}
