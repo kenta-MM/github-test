@@ -1,30 +1,15 @@
 name: Auto Link Issue
 on: pull_request
 jobs:
-  checkout:
-    runs-on: ubuntu-latest
-    timeout-minutes: 1
-    steps:
-        - uses: actions/checkout@v4
-  link_issue_to_pr:
-    runs-on: ubuntu-latest
-    timeout-minutes: 1
-    permissions:              # GITHUB_TOKENの権限を設定
-      pull-requests: write    # プルリクエストの書き込みを許可
-      issues: write           # ISSUEへの書き込みを許可する
-    if: ${{ startsWith(github.head_ref, 'issue-')}}
-    steps:
-      - id: source
-        run: |
-          ISSUE_NUM="${{ github.head_ref }}"
-          ISSUE_NUM="${ISSUE_NUM:6}"
-          echo "issue_num=$ISSUE_NUM" >> "$GITHUB_OUTPUT"
-      - run: |
-          CMD="gh api repos/${REPOSITORY}/pulls/${PR_NUMBER} -X PATCH -F body=Closes #${ISSUE_NUM}"
-          echo "Executing: $CMD"
-          eval "$CMD"
-        env:
-          REPOSITORY: ${{ github.repository }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          ISSUE_NUM: ${{ steps.source.outputs.issue_num }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  issue-linkes:
+      runs-on: ubuntu-latest
+      permissions:
+          pull-requests: write
+      timeout-minutes: 1
+      steps:
+          - uses: tkt-actions/add-issue-links@v1.8.1
+            with:
+              repo-token: "${{ secrets.GITHUB_TOKEN  }}"
+              branch-prefix: "issue-"
+              link-style: 'body'
+              
