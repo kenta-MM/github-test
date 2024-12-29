@@ -23,6 +23,6 @@ jobs:
             env:
                 ISSUE_NUM: ${{ steps.source.outputs.issue_num }}
           - run: |
-                CMD="gh issue view ${ISSUE_NUM} --json body, labels"
+                CMD="gh issue view ${ISSUE_NUM} --json body, labels, projectItems, assignees"
                 echo "Executing: $CMD"
                 eval "$CMD"
