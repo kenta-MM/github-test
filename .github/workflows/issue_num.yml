@@ -9,6 +9,9 @@ jobs:
   link_issue_to_pr:
     runs-on: ubuntu-latest
     timeout-minutes: 1
+    permissions:              # GITHUB_TOKENの権限を設定
+      pull-requests: write    # プルリクエストの書き込みを許可
+      contents: read          # ソースコードの読み込みを許可
     if: ${{ startsWith(github.head_ref, 'issue-')}}
     steps:
       - id: source
@@ -27,4 +30,5 @@ jobs:
         env:
           REPOSITORY: ${{ github.repository }}
           PR_URL: ${{ github.event.pull_request.url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # GitHub CLI用クレデンシャル
 
