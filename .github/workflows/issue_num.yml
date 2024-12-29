@@ -14,10 +14,10 @@ jobs:
   link_issuse:
         runs-on: ubuntu-latest
         timeout-minutes: 1
-        if: ${{ startsWith(github.ref_name, 'issue-')}}
+        if: ${{ startsWith(github.head_ref, 'issue-')}}
         steps:
             - id: sass
-              run: echo "issue_num=${github.ref_name:6}" >> "${GITHUB_OUTPUT}"
+              run: echo "issue_num=${github.head_ref:6}" >> "${GITHUB_OUTPUT}"
             - run:
-                echo ${{ steps.source.outputs.issue_num }}
+                echo issue_nume='${steps.source.outputs.issue_num}'
           
