@@ -20,7 +20,7 @@ jobs:
           ISSUE_NUM="${ISSUE_NUM:6}"
           echo "issue_num=$ISSUE_NUM" >> "$GITHUB_OUTPUT"
       - run: |
-          CMD="gh api repos/${REPOSITORY}/issues/${ISSUE_NUM} -X PATCH -F pull_request=${PR_URL}"
+          CMD="gh api repos/${REPOSITORY}/issues/${ISSUE_NUM} -X PATCH -F pull_request="${PR_URL}""
           echo "Executing: $CMD"
           eval "$CMD"
         env:
