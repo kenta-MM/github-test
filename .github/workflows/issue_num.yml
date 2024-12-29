@@ -1,0 +1,18 @@
+name: Auto Link Issue
+on: pull_request
+jobs:
+  checkout:
+        runs-on: ubuntu-latest
+        timeout-minutes: 1
+        steps:
+            - uses: actions/checkout@v4
+  link_issuse:
+        runs-on: ubuntu-latest
+        timeout-minutes: 1
+        if: ${{ startsWith(github.ref_name, 'issue-')}}
+        steps:
+            - id: sass
+              run: echo "issue_num=${github.ref_name:6}" >> "${GITHUB_OUTPUT}"
+            - run:
+                echo ${{ steps.source.outputs.issue_num }}
+          
