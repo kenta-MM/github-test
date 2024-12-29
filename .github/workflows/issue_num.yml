@@ -15,17 +15,14 @@ jobs:
     if: ${{ startsWith(github.head_ref, 'issue-')}}
     steps:
       - id: source
-        name: link issue to pull request
         run: |
           ISSUE_NUM="${{ github.head_ref }}"
           ISSUE_NUM="${ISSUE_NUM:6}"
           echo "issue_num=$ISSUE_NUM" >> "$GITHUB_OUTPUT"
       - run: |
-          echo "REPOSITORY=$REPOSITORY"
-          echo "ISSUE_NUM=$ISSUE_NUM"
-          echo "PR_URL=$PR_URL"
-          gh api "repos/$REPOSITORY/issues/$ISSUE_NUM -X PATCH -F pull_request="$PR_URL"
-        name: link issue to pull request
+          CMD="gh api repos/${REPOSITORY}/issues/${ISSUE_NUM} -X PATCH -F pull_request=${PR_URL}"
+          echo "Executing: $CMD"
+          eval "$CMD"
         env:
           REPOSITORY: ${{ github.repository }}
           PR_URL: ${{ github.event.pull_request.url }}
