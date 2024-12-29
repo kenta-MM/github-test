@@ -26,3 +26,4 @@ jobs:
                 eval "$CMD"
             env:
               ISSUE_NUM: ${{ steps.source.outputs.issue_num }}
+              GH_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
