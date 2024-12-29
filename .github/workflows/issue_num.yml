@@ -22,6 +22,9 @@ jobs:
         env:
           ISSUE_NUM: ${{ steps.source.outputs.issue_num }}
       - run: |
-          gh api repos/${{ github.repository }}/issues/"${ISSUE_NUM}" -X PATCH -F "pull_request=${{ github.event.pull_request.url }}"
+          gh api repos/"$REPOSITORY"/issues/"$ISSUE_NUM" -X PATCH -F "pull_request="$PR_URL""
         name: link issue to pull request
+        env:
+          REPOSITORY: ${{ github.repository }}
+          PR_URL: ${{ github.event.pull_request.url }}
 
