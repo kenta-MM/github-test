@@ -22,5 +22,5 @@ jobs:
                 ISSUE_NUM="${ISSUE_NUM:6}"
                 echo "issue_num=$ISSUE_NUM" >> "$GITHUB_OUTPUT"
             - run:
-                echo issue_nume="${steps.source.outputs.issue_num}"
+                echo issue_num=${{ steps.source.outputs.issue_num }}
           
