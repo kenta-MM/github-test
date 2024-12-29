@@ -24,7 +24,8 @@ jobs:
           echo "REPOSITORY=$REPOSITORY"
           echo "ISSUE_NUM=$ISSUE_NUM"
           echo "PR_URL=$PR_URL"
-          gh api repos/${REPOSITORY}/issues/${ISSUE_NUM} -X PATCH -F pull_request="${PR_URL}"        name: link issue to pull request
+          gh api "repos/$REPOSITORY/issues/$ISSUE_NUM -X PATCH -F pull_request="$PR_URL"
+        name: link issue to pull request
         env:
           REPOSITORY: ${{ github.repository }}
           PR_URL: ${{ github.event.pull_request.url }}
