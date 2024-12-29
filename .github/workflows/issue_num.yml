@@ -1,11 +1,13 @@
-name: Auto Link Issue
+name: Pull Request Link to Issue 
 on: pull_request
 jobs:
   issue-linkes:
       runs-on: ubuntu-latest
       permissions:
           pull-requests: write
+          issues: read
       timeout-minutes: 1
+      if: ${{ startsWith(github.head_ref, 'issue-') }}
       steps:
           - uses: tkt-actions/add-issue-links@v1.8.1
             with:
@@ -13,4 +15,14 @@ jobs:
               branch-prefix: "issue-"
               link-style: 'body'
               resolve: 'true'
-              
+          - id: source
+            run: |
+                ISSUE_NUM="${{ github.head_ref }}"
+                ISSUE_NUM="${ISSUE_NUM:6}"
+                echo "issue_num=$ISSUE_NUM" >> "$GITHUB_OUTPUT"
+            env:
+                ISSUE_NUM: ${{ steps.source.outputs.issue_num }}
+          - run: |
+                CMD="gh issue view ${ISSUE_NUM} --json body, labels"
+                echo "Executing: $CMD"
+                eval "$CMD"
