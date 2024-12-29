@@ -22,7 +22,7 @@ jobs:
                 echo "issue_num=$ISSUE_NUM" >> "$GITHUB_OUTPUT"
           - uses: actions/checkout@v4
           - run: |
-                CMD="gh issue view ${ISSUE_NUM} --json body"
+                CMD="gh issue view ${ISSUE_NUM}"
                 echo "Executing: $CMD"
                 eval "$CMD"
             env:
