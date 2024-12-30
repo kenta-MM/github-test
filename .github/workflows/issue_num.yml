@@ -60,9 +60,9 @@ jobs:
               PROJECT_NUM: 4
             run: |
               PROJECT_ID=$(gh api graphql -f query='
-              query {
+                query {
                   user(login: "kenta-MM") {
-                    projectsV2(first: ${PROJECT_NUM}) {
+                    projectsV2(first: $PROJECT_NUM) {
                       nodes {
                         id
                         title
