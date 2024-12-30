@@ -11,17 +11,15 @@ jobs:
       steps:
           - uses: tkt-actions/add-issue-links@v1.8.1
             with:
-              repo-token: "${GH_TOKEN}"
+              repo-token: ${{ secrets.GITHUB_TOKEN }}
               branch-prefix: "issue-"
               link-style: 'body'
               resolve: 'true'
-            env:
-              GH_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
           - id: source
             run: |
                 ISSUE_NUM="${HEAD_REF}"
                 ISSUE_NUM="${ISSUE_NUM:6}"
-                echo "issue_num=$ISSUE_NUM" >> "$GITHUB_OUTPUT"
+                echo "issue_num=${ISSUE_NUM}" >> "$GITHUB_OUTPUT"
             env:
               HEAD_REF: ${{ github.head_ref }}
           - uses: actions/checkout@v4
