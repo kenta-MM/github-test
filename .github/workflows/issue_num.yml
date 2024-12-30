@@ -59,10 +59,10 @@ jobs:
               GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               PROJECT_NUM: 4
             run: |
-              PROJECT_ID=$(gh api graphql -f query='
+              CMD="gh api graphql -f query='
                 query {
                   user(login: "kenta-MM") {
-                    projectsV2(first: $PROJECT_NUM) {
+                    projectsV2(first: ${PROJECT_NUM}) {
                       nodes {
                         id
                         title
@@ -70,7 +70,8 @@ jobs:
                     }
                   }
                 }
-              ' | jq -r '.data.user.projectsV2.nodes[] | select(.title=="家計簿アプリ開発") | .id')
+              ' | jq -r '.data.user.projectsV2.nodes[] | select(.title=="家計簿アプリ開発") | .id'"
+              PROJECT_ID=$(eval "$CMD")
               echo "Project ID: $PROJECT_ID"
               echo "project_id=$PROJECT_ID" >> $GITHUB_OUTPUT
           - name: Add Project to PR
