@@ -53,6 +53,14 @@ jobs:
               GH_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
               LABELS: ${{ steps.issue_data.outputs.labels }}
               PR_NUMBER: ${{ github.event.pull_request.number }}
+          - name: Get Project ID
+            id: get_project_id
+            env:
+              GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            run: |
+                CMD="gh project view 4"
+                echo "Executing command: $CMD"
+                eval "$CMD"
           - name: Add Project to PR
             run: |
               echo "Adding project to Pull Request"
