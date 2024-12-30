@@ -60,10 +60,10 @@ jobs:
               PROJECT_NUM: 4
             run: |
               echo "Building GraphQL Command..."
-              QUERY="gh api graphql -f query='
+              QUERY='
                 query {
-                  user(login: \"kenta-MM\") {
-                    projectsV2(first: ${PROJECT_NUM}) {
+                  user(login: "kenta-MM") {
+                    projectsV2(first: '"${PROJECT_NUM}"') {
                       nodes {
                         id
                         title
@@ -71,8 +71,21 @@ jobs:
                     }
                   }
                 }
-              ' | jq -r '.data.user.projectsV2.nodes[] | select(.title==\"家計簿アプリ開発\") | .id'"
-              PROJECT_ID=$(eval "$CMD")
+              '
+
+              echo "Executing GraphQL Query..."
+              RESPONSE=$(gh api graphql -f query="$QUERY")
+              
+              echo "GraphQL Response:"
+              echo "$RESPONSE"
+              
+              PROJECT_ID=$(echo "$RESPONSE" | jq -r '.data.user.projectsV2.nodes[] | select(.title=="家計簿アプリ開発") | .id')
+              if [[ -z "$PROJECT_ID" ]]; then
+                echo "❌ Error: Failed to retrieve Project ID"
+                echo "Response was: $RESPONSE"
+                exit 1
+              fi
+
               echo "Project ID: $PROJECT_ID"
               echo "project_id=$PROJECT_ID" >> $GITHUB_OUTPUT
           - name: Add Project to PR
