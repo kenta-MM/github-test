@@ -53,3 +53,13 @@ jobs:
               GH_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
               LABELS: ${{ steps.issue_data.outputs.labels }}
               PR_NUMBER: ${{ github.event.pull_request.number }}
+          - name: Add Project to PR
+            run: |
+              echo "Adding project to Pull Request"
+              CMD="gh pr edit ${PR_NUMBER} --add-project \"家計簿アプリ開発\""
+              echo "Executing command: $CMD"
+              eval "$CMD"
+            env:
+              GH_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+              PR_NUMBER: ${{ github.event.pull_request.number }}
+        
