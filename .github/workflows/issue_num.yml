@@ -70,7 +70,7 @@ jobs:
                     }
                   }
                 }
-              ' | jq -r '.data.user.projectsV2.nodes[] | select(.title=="家計簿アプリ開発") | .id'"
+              ' | jq -r '.data.user.projectsV2.nodes[] | select(.title==\"家計簿アプリ開発\") | .id'"
               PROJECT_ID=$(eval "$CMD")
               echo "Project ID: $PROJECT_ID"
               echo "project_id=$PROJECT_ID" >> $GITHUB_OUTPUT
