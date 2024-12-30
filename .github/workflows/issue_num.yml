@@ -11,37 +11,41 @@ jobs:
       steps:
           - uses: tkt-actions/add-issue-links@v1.8.1
             with:
-              repo-token: "${{ secrets.GITHUB_TOKEN  }}"
+              repo-token: "${GH_TOKEN}"
               branch-prefix: "issue-"
               link-style: 'body'
               resolve: 'true'
+            env:
+              GH_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
           - id: source
             run: |
-                ISSUE_NUM="${{ github.head_ref }}"
+                ISSUE_NUM="${HEAD_REF}"
                 ISSUE_NUM="${ISSUE_NUM:6}"
                 echo "issue_num=$ISSUE_NUM" >> "$GITHUB_OUTPUT"
+            env:
+              HEAD_REF: ${{ github.head_ref }}
           - uses: actions/checkout@v4
           - name: Fetch Issue Data
             id: issue_data
             run: |
                 echo "Fetching issue data for issue-${ISSUE_NUM}"
                 CMD="gh api repos/${REPOSITORY}/issues/${ISSUE_NUM}"
-                echo "Executing: $CMD"
-                ISSUE_JSON=$(eval "$CMD")
+                echo "Executing: ${CMD}"
+                ISSUE_JSON=$(eval "${CMD}")
 
                 # ラベルを抽出
                 LABELS=$(echo "$ISSUE_JSON" | jq -r '.labels[].name' | tr '\n' ',' | sed 's/,$//')
-                echo "Extracted Labels: $LABELS"
-                echo "labels=$LABELS" >> "$GITHUB_OUTPUT"
+                echo "Extracted Labels: ${LABELS}"
+                echo "labels=${LABELS}" >> "$GITHUB_OUTPUT"
             env:
               REPOSITORY: ${{ github.repository }}
               ISSUE_NUM: ${{ steps.source.outputs.issue_num }}
               GH_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
           - name: Add Lables to PR
             run: | 
-              echo "Adding labels to Pull Request: $LABELS"
-              if [[ -n "$LABELS" ]]; then
-                CMD="gh pr edit ${{ github.event.pull_request.number }} -- add-label \"$LABELS\""
+              echo "Adding labels to Pull Request: ${LABELS}"
+              if [[ -n "${LABELS}" ]]; then
+                CMD="gh pr edit ${PR_NUMBER} --add-label \"${LABELS}\""
                 echo "Executing command: $CMD"
                 eval "$CMD"
               else 
@@ -50,3 +54,4 @@ jobs:
             env:
               GH_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
               LABELS: ${{ steps.issue_data.outputs.labels }}
+              PR_NUMBER: ${{ github.event.pull_request.number }}
