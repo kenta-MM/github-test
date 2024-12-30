@@ -59,9 +59,10 @@ jobs:
               GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               PROJECT_NUM: 4
             run: |
-              CMD="gh api graphql -f query='
+              echo "Building GraphQL Command..."
+              QUERY="gh api graphql -f query='
                 query {
-                  user(login: "kenta-MM") {
+                  user(login: \"kenta-MM\") {
                     projectsV2(first: ${PROJECT_NUM}) {
                       nodes {
                         id
