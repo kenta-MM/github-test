@@ -57,10 +57,22 @@ jobs:
             id: get_project_id
             env:
               GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              PROJECT_NUM: 4
             run: |
-                CMD="gh project view 4"
-                echo "Executing command: $CMD"
-                eval "$CMD"
+              PROJECT_ID=$(gh api graphql -f query='
+              query {
+                  user(login: "kenta-MM") {
+                    projectsV2(first: ${PROJECT_NUM}) {
+                      nodes {
+                        id
+                        title
+                      }
+                    }
+                  }
+                }
+              ' | jq -r '.data.user.projectsV2.nodes[] | select(.title=="家計簿アプリ開発") | .id')
+              echo "Project ID: $PROJECT_ID"
+              echo "project_id=$PROJECT_ID" >> $GITHUB_OUTPUT
           - name: Add Project to PR
             run: |
               echo "Adding project to Pull Request"
