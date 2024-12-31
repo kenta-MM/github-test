@@ -91,10 +91,11 @@ jobs:
           - name: Add Project to PR
             run: |
               echo "Adding project to Pull Request"
-              CMD="gh pr edit ${PR_NUMBER} --add-project \"4\""
+              CMD="gh pr edit ${PR_NUMBER} --add-project ${PROJECT_ID}"
               echo "Executing command: $CMD"
               eval "$CMD"
             env:
               GH_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
               PR_NUMBER: ${{ github.event.pull_request.number }}
+              PROJECT_ID: ${{ steps.get_project_id.outputs.project_id }}
         
