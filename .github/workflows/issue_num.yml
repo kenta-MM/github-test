@@ -91,7 +91,7 @@ jobs:
           - name: Add Project to PR
             run: |
               echo "Adding project to Pull Request"
-              CMD="gh pr edit ${PR_NUMBER} --add-project ${PROJECT_ID}"
+              CMD="gh pr edit ${PR_NUMBER} --add-project \"${PROJECT_ID}\""
               echo "Executing command: $CMD"
               eval "$CMD"
             env:
