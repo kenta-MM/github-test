@@ -63,9 +63,9 @@ jobs:
               echo "Adding project to Pull Request"
               CMD="gh pr edit ${PR_NUMBER} --add-assignee \"${GITHUB_ACTOR}\""
               echo "Executing command: $CMD"
-              # eval "$CMD"
-              gh pr edit "${PR_NUMBER}" --add-assignee "\"${GITHUB_ACTOR}\""
+              eval "$CMD"
             env:
+              GH_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
               PR_NUMBER: ${{ github.event.pull_request.number }}
               GITHUB_ACTOR: ${{ github.actor }}
           - name: Add Project to PR
