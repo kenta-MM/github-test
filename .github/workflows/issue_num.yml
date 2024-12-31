@@ -52,7 +52,7 @@ jobs:
               if [[ -n "${LABELS}" ]]; then
                 CMD="gh pr edit ${PR_NUMBER} --add-label \"${LABELS}\""
                 echo "Executing command: $CMD"
-                eval "$CMD"
+                $CMD
               else 
                 echo "No labels found on the Issue."
               fi
@@ -65,7 +65,7 @@ jobs:
               echo "Adding project to Pull Request"
               CMD="gh pr edit ${PR_NUMBER} --add-assignee \"${GITHUB_ACTOR}\""
               echo "Executing command: $CMD"
-              eval "$CMD"
+              $CMD
             env:
               GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               PR_NUMBER: ${{ github.event.pull_request.number }}
@@ -75,7 +75,7 @@ jobs:
               echo "Adding project to Pull Request"
               CMD="gh pr edit ${PR_NUMBER} --add-project \"家計簿アプリ開発\""
               echo "Executing command: $CMD"
-              eval "$CMD"
+              $CMD
             env:
               GH_TOKEN: ${{ secrets.PAT  }} # privateなプロジェクトを参照するにはPATしかできない。
               PR_NUMBER: ${{ github.event.pull_request.number }}
