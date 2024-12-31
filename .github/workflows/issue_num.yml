@@ -13,20 +13,23 @@ jobs:
       timeout-minutes: 1
       if: ${{ startsWith(github.head_ref, 'issue-') }}
       steps:
-          - uses: tkt-actions/add-issue-links@v1.8.1
+          - name: Add Issue to PR
+            uses: tkt-actions/add-issue-links@v1.8.1
             with:
               repo-token: ${{ secrets.GITHUB_TOKEN }}
               branch-prefix: "issue-"
               link-style: 'body'
               resolve: 'true'
-          - id: source
+          - name: Get Issue Num
+            id: source
             run: |
                 ISSUE_NUM="${HEAD_REF}"
                 ISSUE_NUM="${ISSUE_NUM:6}"
                 echo "issue_num=${ISSUE_NUM}" >> "$GITHUB_OUTPUT"
             env:
               HEAD_REF: ${{ github.head_ref }}
-          - uses: actions/checkout@v4
+          - name: Checkout
+            uses: actions/checkout@v4
           - name: Fetch Issue Data
             id: issue_data
             run: |
@@ -64,7 +67,7 @@ jobs:
               echo "Executing command: $CMD"
               eval "$CMD"
             env:
-              GH_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
+              GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               PR_NUMBER: ${{ github.event.pull_request.number }}
               GITHUB_ACTOR: ${{ github.actor }}
           - name: Add Project to PR
