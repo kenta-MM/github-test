@@ -1,82 +1,87 @@
-name: Link to PR 
+name: Link to PR
 on: 
   pull_request:
     types:
       - opened  
       - reopened
-jobs:
-  issue-linkes:
-      runs-on: ubuntu-latest
-      permissions:
-          pull-requests: write
-          issues: read
-      timeout-minutes: 1
-      if: ${{ startsWith(github.head_ref, 'issue-') }}
-      steps:
-          - name: Add Issue to PR
-            uses: tkt-actions/add-issue-links@v1.8.1
-            with:
-              repo-token: ${{ secrets.GITHUB_TOKEN }}
-              branch-prefix: "issue-"
-              link-style: 'body'
-              resolve: 'true'
-          - name: Get Issue Num
-            id: source
-            run: |
-                ISSUE_NUM="${HEAD_REF}"
-                ISSUE_NUM="${ISSUE_NUM:6}"
-                echo "issue_num=${ISSUE_NUM}" >> "$GITHUB_OUTPUT"
-            env:
-              HEAD_REF: ${{ github.head_ref }}
-          - name: Checkout
-            uses: actions/checkout@v4
-          - name: Fetch Issue Data
-            id: issue_data
-            run: |
-                echo "Fetching issue data for issue-${ISSUE_NUM}"
-                CMD="gh api repos/${REPOSITORY}/issues/${ISSUE_NUM}"
-                echo "Executing: ${CMD}"
-                ISSUE_JSON=$(eval "${CMD}")
 
-                # ラベルを抽出
-                LABELS=$(echo "$ISSUE_JSON" | jq -r '.labels[].name' | tr '\n' ',' | sed 's/,$//')
-                echo "Extracted Labels: ${LABELS}"
-                echo "labels=${LABELS}" >> "$GITHUB_OUTPUT"
-            env:
-              REPOSITORY: ${{ github.repository }}
-              ISSUE_NUM: ${{ steps.source.outputs.issue_num }}
-              GH_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
-          - name: Add Lables to PR
-            run: | 
-              echo "Adding labels to Pull Request: ${LABELS}"
-              if [[ -n "${LABELS}" ]]; then
-                CMD=("gh" "pr" "edit" "${PR_NUMBER}" "--add-label" "${LABELS}")
-                echo "Executing command: ${CMD[@]}"
-                "${CMD[@]}"
-              else 
-                echo "No labels found on the Issue."
-              fi
-            env:
-              GH_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
-              LABELS: ${{ steps.issue_data.outputs.labels }}
-              PR_NUMBER: ${{ github.event.pull_request.number }}
-          - name: Add Assignee to PR
-            run: |
-              echo "Adding project to Pull Request"
-              CMD="gh pr edit ${PR_NUMBER} --add-assignee \"${GITHUB_ACTOR}\""
-              echo "Executing command: $CMD"
-              $CMD
-            env:
-              GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              PR_NUMBER: ${{ github.event.pull_request.number }}
-              GITHUB_ACTOR: ${{ github.actor }}
-          - name: Add Project to PR
-            run: |
-              echo "Adding project to Pull Request"
-              CMD="gh pr edit ${PR_NUMBER} --add-project \"家計簿アプリ開発\""
-              echo "Executing command: $CMD"
-              $CMD
-            env:
-              GH_TOKEN: ${{ secrets.PAT  }} # privateなプロジェクトを参照するにはPATしかできない。
-              PR_NUMBER: ${{ github.event.pull_request.number }}
-        
+jobs:
+  issue-links:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      issues: read
+    timeout-minutes: 1
+    if: ${{ startsWith(github.head_ref, 'issue-') }}
+    steps:
+      # IssueをPRに追加
+      - name: Add Issue to PR
+        uses: tkt-actions/add-issue-links@v1.8.1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          branch-prefix: "issue-"
+          link-style: 'body'
+          resolve: 'true'
+
+      # Issue番号を取得
+      - name: Get Issue Num
+        id: source
+        run: |
+          ISSUE_NUM="${HEAD_REF}"
+          ISSUE_NUM="${ISSUE_NUM:6}"
+          echo "issue_num=${ISSUE_NUM}" >> "$GITHUB_OUTPUT"
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+
+      # リポジトリをチェックアウト
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Issueデータを取得
+      - name: Fetch Issue Data
+        id: issue_data
+        run: |
+          echo "Fetching issue data for issue-${ISSUE_NUM}"
+          ISSUE_JSON=$(gh api repos/${REPOSITORY}/issues/${ISSUE_NUM})
+          
+          # ラベルを抽出
+          LABELS=$(echo "$ISSUE_JSON" | jq -r '.labels[].name' | tr '\n' ',' | sed 's/,$//')
+          echo "Extracted Labels: ${LABELS}"
+          echo "labels=${LABELS}" >> "$GITHUB_OUTPUT"
+        env:
+          REPOSITORY: ${{ github.repository }}
+          ISSUE_NUM: ${{ steps.source.outputs.issue_num }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # PRにラベルを追加
+      - name: Add Labels to PR
+        run: |
+          echo "Adding labels to Pull Request: ${LABELS}"
+          if [[ -n "${LABELS}" ]]; then
+            gh pr edit "${PR_NUMBER}" --add-label "${LABELS}"
+          else 
+            echo "No labels found on the Issue."
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LABELS: ${{ steps.issue_data.outputs.labels }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+
+      # PRに作成者をアサイン
+      - name: Add Assignee to PR
+        run: |
+          echo "Adding assignee to Pull Request"
+          gh pr edit "${PR_NUMBER}" --add-assignee "${GITHUB_ACTOR}"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GITHUB_ACTOR: ${{ github.actor }}
+
+      # PRにプロジェクトを追加
+      - name: Add Project to PR
+        run: |
+          echo "Adding project to Pull Request"
+          gh pr edit "${PR_NUMBER}" --add-project "家計簿アプリ開発"
+        env:
+          GH_TOKEN: ${{ secrets.PAT }} # privateなプロジェクトにはPATが必要
+          PR_NUMBER: ${{ github.event.pull_request.number }}
