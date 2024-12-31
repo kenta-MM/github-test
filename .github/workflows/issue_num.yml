@@ -62,7 +62,7 @@ jobs:
               echo "Building GraphQL Command..."
               QUERY="
                 query {
-                  user(login: "kenta-MM") {
+                  user(login: \"kenta-MM\") {
                     projectsV2(first: "${PROJECT_NUM}") {
                       nodes {
                         id
