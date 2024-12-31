@@ -1,5 +1,9 @@
 name: Pull Request Link to Issue 
-on: pull_request
+on: 
+  pull_request:
+    types:
+      - opened  
+      - reopened
 jobs:
   issue-linkes:
       runs-on: ubuntu-latest
@@ -53,41 +57,15 @@ jobs:
               GH_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
               LABELS: ${{ steps.issue_data.outputs.labels }}
               PR_NUMBER: ${{ github.event.pull_request.number }}
-          - name: Get Project ID
-            id: get_project_id
-            env:
-              GH_TOKEN: ${{ secrets.PAT }}
-              PROJECT_NUM: 4
+          - name: Add Assignee to PR
             run: |
-              echo "Building GraphQL Command..."
-              QUERY="
-                query {
-                  user(login: \"kenta-MM\") {
-                    projectsV2(first: "${PROJECT_NUM}") {
-                      nodes {
-                        id
-                        title
-                      }
-                    }
-                  }
-                }
-              "
-
-              echo "Executing GraphQL Query..."
-              RESPONSE=$(gh api graphql -f query="$QUERY")
-              
-              echo "GraphQL Response:"
-              echo "$RESPONSE"
-              
-              PROJECT_ID=$(echo "$RESPONSE" | jq -r '.data.user.projectsV2.nodes[] | select(.title=="家計簿アプリ開発") | .id')
-              if [[ -z "$PROJECT_ID" ]]; then
-                echo "❌ Error: Failed to retrieve Project ID"
-                echo "Response was: $RESPONSE"
-                exit 1
-              fi
-
-              echo "Project ID: $PROJECT_ID"
-              echo "project_id=$PROJECT_ID" >> $GITHUB_OUTPUT
+              gh pr edit 23 --add-assignee
+              echo "Adding project to Pull Request"
+              CMD="gh pr edit ${PR_NUMBER} --add-assignee \"${GITHUB_ACTOR}\""
+              echo "Executing command: $CMD"
+              eval "$CMD"
+            env:
+              GITHUB_ACTOR: ${{ github.ACTOR }}
           - name: Add Project to PR
             run: |
               echo "Adding project to Pull Request"
@@ -95,7 +73,6 @@ jobs:
               echo "Executing command: $CMD"
               eval "$CMD"
             env:
-              GH_TOKEN: ${{ secrets.PAT  }}
+              GH_TOKEN: ${{ secrets.PAT  }} # privateなプロジェクトを参照するにはPATしかできない。
               PR_NUMBER: ${{ github.event.pull_request.number }}
-              PROJECT_ID: ${{ steps.get_project_id.outputs.project_id }}
         
