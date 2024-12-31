@@ -6,6 +6,7 @@ jobs:
       permissions:
           pull-requests: write
           issues: read
+          repository-projects: read
       timeout-minutes: 1
       if: ${{ startsWith(github.head_ref, 'issue-') }}
       steps:
