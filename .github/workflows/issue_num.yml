@@ -6,7 +6,6 @@ jobs:
       permissions:
           pull-requests: write
           issues: read
-          repository-projects: read
       timeout-minutes: 1
       if: ${{ startsWith(github.head_ref, 'issue-') }}
       steps:
@@ -57,7 +56,7 @@ jobs:
           - name: Get Project ID
             id: get_project_id
             env:
-              GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              GH_TOKEN: ${{ secrets.PAT }}
               PROJECT_NUM: 4
             run: |
               echo "Building GraphQL Command..."
