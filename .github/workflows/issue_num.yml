@@ -61,7 +61,7 @@ jobs:
             run: |
               gh pr edit 23 --add-assignee
               echo "Adding project to Pull Request"
-              CMD="gh pr edit ${PR_NUMBER} --add-assignee \"@me\""
+              CMD="gh pr edit ${PR_NUMBER} --add-assignee \"'@me'\""
               echo "Executing command: $CMD"
               eval "$CMD"
             env:
