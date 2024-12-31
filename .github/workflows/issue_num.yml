@@ -50,9 +50,9 @@ jobs:
             run: | 
               echo "Adding labels to Pull Request: ${LABELS}"
               if [[ -n "${LABELS}" ]]; then
-                CMD="gh pr edit ${PR_NUMBER} --add-label \"${LABELS}\""
-                echo "Executing command: $CMD"
-                $CMD
+                CMD=("gh" "pr" "edit" "${PR_NUMBER}" "--add-label" "${LABELS}")
+                echo "Executing command: ${CMD[@]}"
+                "${CMD[@]}"
               else 
                 echo "No labels found on the Issue."
               fi
