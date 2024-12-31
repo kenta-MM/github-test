@@ -1,4 +1,4 @@
-name: Pull Request Link to Issue 
+name: Link to PR 
 on: 
   pull_request:
     types:
