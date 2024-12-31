@@ -64,6 +64,8 @@ jobs:
               CMD="gh pr edit ${PR_NUMBER} --add-assignee \"@me\""
               echo "Executing command: $CMD"
               eval "$CMD"
+            env:
+              PR_NUMBER: ${{ github.event.pull_request.number }}
           - name: Add Project to PR
             run: |
               echo "Adding project to Pull Request"
