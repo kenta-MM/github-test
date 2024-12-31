@@ -60,10 +60,10 @@ jobs:
               PROJECT_NUM: 4
             run: |
               echo "Building GraphQL Command..."
-              QUERY='
+              QUERY="
                 query {
                   user(login: "kenta-MM") {
-                    projectsV2(first: '"${PROJECT_NUM}"') {
+                    projectsV2(first: "${PROJECT_NUM}") {
                       nodes {
                         id
                         title
@@ -71,7 +71,7 @@ jobs:
                     }
                   }
                 }
-              '
+              "
 
               echo "Executing GraphQL Query..."
               RESPONSE=$(gh api graphql -f query="$QUERY")
